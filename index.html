@@ -1,41 +1,574 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>WODLogic</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body{
-  font-family: Arial;
-  max-width: 700px;
-  margin: 60px auto;
-  padding: 20px;
-  line-height: 1.6;
-}
-h1{color:#222}
-</style>
-</head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WodLogic — Barbell Calculator & Workout Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --navy:       #050C1A;
+      --navy-mid:   #0A1628;
+      --navy-card:  #0D1F3C;
+      --blue:       #3B8BEB;
+      --blue-pale:  #A8CCF0;
+      --blue-dim:   #1A3A6B;
+      --cyan:       #00C8FF;
+      --white:      #EEF4FF;
+      --muted:      #6A84A8;
+      --border:     rgba(59,139,235,0.18);
+      --border-mid: rgba(59,139,235,0.35);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(5,12,26,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-logo img { width: 36px; height: 36px; border-radius: 10px; object-fit: cover; }
+    .nav-logo-text { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 0.05em; color: var(--white); }
+    .nav-logo-text span { color: var(--cyan); }
+    .nav-cta {
+      background: var(--blue); color: #fff; padding: 9px 22px; border-radius: 100px;
+      font-size: 14px; font-weight: 500; text-decoration: none;
+      box-shadow: 0 0 20px rgba(59,139,235,0.35);
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    /* HERO */
+    .hero {
+      max-width: 1100px; margin: 0 auto;
+      padding: 7rem 2rem 5rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; gap: 4rem;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(59,139,235,0.1); border: 1px solid var(--border-mid);
+      color: var(--blue-pale); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 6px 14px; border-radius: 100px; margin-bottom: 1.75rem;
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(60px, 8vw, 100px); line-height: 0.93;
+      letter-spacing: 0.02em; margin-bottom: 1.5rem;
+    }
+    .hero h1 em { font-style: normal; color: var(--cyan); }
+
+    .hero p { font-size: 17px; color: var(--muted); font-weight: 300; max-width: 420px; margin-bottom: 1.75rem; line-height: 1.75; }
+
+    .price-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(0,200,255,0.07); border: 1px solid rgba(0,200,255,0.25);
+      border-radius: 12px; padding: 10px 16px; margin-bottom: 2rem;
+    }
+    .price-badge .price { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--cyan); letter-spacing: 0.04em; line-height: 1; }
+    .price-badge .price-detail { font-size: 13px; color: var(--blue-pale); font-weight: 300; line-height: 1.4; }
+    .price-badge .price-detail strong { display: block; font-weight: 500; color: var(--white); font-size: 14px; }
+
+    .hero-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+
+    .btn-primary {
+      background: var(--blue); color: #fff; padding: 14px 28px; border-radius: 100px;
+      font-size: 15px; font-weight: 500; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      box-shadow: 0 0 30px rgba(59,139,235,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 45px rgba(59,139,235,0.55); }
+
+    .btn-ghost {
+      color: var(--blue-pale); font-size: 15px; font-weight: 400; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      border: 1px solid var(--border-mid); padding: 13px 22px; border-radius: 100px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .btn-ghost:hover { color: var(--white); border-color: var(--blue); }
+
+    /* PHONES */
+    .hero-phones {
+      position: relative; height: 540px;
+      display: flex; align-items: flex-end; justify-content: center;
+    }
+    .phone {
+      position: absolute; background: #0D1624;
+      border-radius: 36px; overflow: hidden;
+      border: 7px solid #1A2A44;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(59,139,235,0.12);
+    }
+    .phone-main  { width: 220px; z-index: 3; bottom: 0; left: 50%; transform: translateX(-50%); }
+    .phone-left  { width: 188px; z-index: 2; bottom: 50px; left: 0; transform: rotate(-7deg); opacity: 0.82; }
+    .phone-right { width: 188px; z-index: 2; bottom: 50px; right: 0; transform: rotate(7deg);  opacity: 0.82; }
+
+    .phone-screen { background: #FAF6F1; color: #2C2C2A; padding: 14px 12px 10px; min-height: 375px; }
+    .phone-notch  { width: 80px; height: 20px; background: #0D1624; border-radius: 0 0 14px 14px; margin: -4px auto 10px; }
+
+    .s-title  { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.03em; color: #2C2C2A; margin-bottom: 4px; }
+    .s-weight { font-family: 'Bebas Neue', sans-serif; font-size: 38px; color: #2C2C2A; line-height: 1; margin-bottom: 2px; }
+    .s-sub    { font-size: 10px; color: #888780; margin-bottom: 8px; }
+    .clear-btn { display: inline-flex; align-items: center; gap: 4px; background: #EDE8E2; border-radius: 20px; padding: 4px 10px; font-size: 9px; color: #BA7517; margin-bottom: 10px; }
+
+    .plate-grid  { display: grid; grid-template-columns: repeat(3,1fr); gap: 5px; margin-bottom: 5px; }
+    .plate-row2  { display: grid; grid-template-columns: repeat(2,1fr); gap: 5px; margin-bottom: 8px; }
+    .plate { border-radius: 8px; padding: 6px 4px; font-size: 9px; font-weight: 500; text-align: center; color: #fff; }
+    .p55{background:#D85A30;} .p45{background:#378ADD;} .p35{background:#BA7517;}
+    .p25{background:#639922;} .p15{background:#5F5E5A;} .p10{background:#888780;}
+    .p5 {background:#B4B2A9;color:#2C2C2A;} .p25s{background:#D3D1C7;color:#2C2C2A;}
+    .s-hint { font-size: 8px; color: #888780; line-height: 1.3; }
+
+    .rm-ex      { font-size: 13px; font-weight: 500; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 5px; margin-bottom: 6px; }
+    .rm-1rm     { font-size: 9px; color: #888780; margin-bottom: 8px; }
+    .rm-pct     { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: #BA7517; border-bottom: 1.5px solid #BA7517; margin-bottom: 8px; }
+    .rm-ww      { font-size: 9px; color: #888780; margin-bottom: 2px; }
+    .rm-kg      { font-family: 'Bebas Neue', sans-serif; font-size: 30px; margin-bottom: 6px; }
+    .rm-pl-label{ font-size: 9px; font-weight: 500; margin-bottom: 4px; }
+    .rm-plates  { display: flex; gap: 5px; }
+    .rp1{background:#639922;color:#fff;border-radius:6px;padding:4px 8px;font-size:9px;font-weight:500;}
+    .rp2{background:#B4B2A9;color:#2C2C2A;border-radius:6px;padding:4px 8px;font-size:9px;font-weight:500;}
+
+    .rounds-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 4px; margin-bottom: 10px; }
+    .rb     { border-radius: 6px; padding: 5px 2px; font-size: 10px; text-align: center; background: #EDE8E2; color: #2C2C2A; }
+    .rb.on  { background: #FAEEDA; color: #BA7517; font-weight: 500; }
+    .rest-row { display: flex; justify-content: space-between; align-items: center; background: #FAEEDA; border-radius: 10px; padding: 8px; margin-bottom: 10px; }
+    .rl { font-size: 10px; font-weight: 500; }
+    .rs { font-size: 8px; color: #888780; }
+    .tog { width: 28px; height: 16px; background: #BA7517; border-radius: 8px; display: flex; align-items: center; padding-right: 2px; justify-content: flex-end; }
+    .tog div { width: 12px; height: 12px; background: #fff; border-radius: 50%; }
+    .t-start { display: inline-block; background: #EDE8E2; border-radius: 20px; padding: 6px 16px; font-size: 11px; color: #BA7517; margin-bottom: 7px; }
+    .t-stop  { display: inline-block; background: #D85A30; border-radius: 20px; padding: 6px 16px; font-size: 11px; color: #fff; font-weight: 500; }
+
+    .tab-bar { background: #EDE8E2; display: flex; justify-content: space-around; padding: 8px 4px 10px; border-top: 1px solid rgba(0,0,0,0.07); }
+    .ti     { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 8px; color: #888780; }
+    .ti.on  { color: #D85A30; }
+    .ti svg { width: 15px; height: 15px; }
+
+    /* LAYOUT */
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 6rem 2rem; }
+    .eyebrow { display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.9rem; }
+    .sec-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px,5vw,68px); line-height: 0.96; letter-spacing: 0.02em; margin-bottom: 1.1rem; }
+    .sec-body  { font-size: 17px; color: var(--muted); font-weight: 300; max-width: 520px; line-height: 1.75; }
+
+    /* FEATURES */
+    .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-top: 3.5rem; }
+    .feat-card {
+      background: var(--navy-card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 2rem;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .feat-card:hover { transform: translateY(-4px); border-color: var(--border-mid); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+    .feat-icon {
+      width: 46px; height: 46px; background: rgba(59,139,235,0.1);
+      border: 1px solid var(--border-mid); border-radius: 13px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 1.25rem;
+    }
+    .feat-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; margin-bottom: 0.5rem; }
+    .feat-card p  { font-size: 14px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+
+    /* STRIPE */
+    .stripe { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5rem 2rem; }
+    .stripe-inner { max-width: 1100px; margin: 0 auto; }
+    .plates-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 3rem; }
+    .plate-chip { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+    .plate-disk {
+      width: 72px; height: 72px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 0.05em; color: #fff;
+      border: 3px solid rgba(255,255,255,0.1); box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+    .plate-chip span { font-size: 11px; color: var(--muted); }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.25rem; margin-top: 3rem; }
+    .stat-card { background: rgba(59,139,235,0.06); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; text-align: center; transition: border-color 0.2s; }
+    .stat-card:hover { border-color: var(--border-mid); }
+    .stat-num   { font-family: 'Bebas Neue', sans-serif; font-size: 52px; line-height: 1; color: var(--white); letter-spacing: 0.03em; }
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 300; }
+
+    /* STEPS */
+    .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2.5rem; margin-top: 3.5rem; }
+    .step { display: flex; gap: 1.25rem; align-items: flex-start; }
+    .step-num { font-family: 'Bebas Neue', sans-serif; font-size: 60px; line-height: 1; color: var(--blue-dim); flex-shrink: 0; width: 54px; }
+    .step-content h3 { font-family: 'Bebas Neue', sans-serif; font-size: 21px; letter-spacing: 0.04em; margin-bottom: 0.4rem; }
+    .step-content p  { font-size: 14px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+
+    /* PRICING SECTION */
+    .pricing-card {
+      background: var(--navy-card); border: 1px solid var(--border-mid);
+      border-radius: 24px; padding: 3rem; max-width: 520px; margin: 3rem auto 0;
+      text-align: center; position: relative; overflow: hidden;
+      box-shadow: 0 0 60px rgba(59,139,235,0.12);
+    }
+    .pricing-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    }
+    .pricing-card .big-price { font-family: 'Bebas Neue', sans-serif; font-size: 80px; color: var(--cyan); line-height: 1; letter-spacing: 0.03em; }
+    .pricing-card .one-time  { font-size: 14px; color: var(--blue-pale); font-weight: 300; margin-bottom: 2rem; letter-spacing: 0.05em; text-transform: uppercase; }
+    .pricing-perks { list-style: none; margin-bottom: 2.5rem; text-align: left; }
+    .pricing-perks li {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 15px; color: var(--blue-pale); font-weight: 300;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .pricing-perks li:last-child { border-bottom: none; }
+    .pricing-perks .check { color: var(--cyan); font-size: 16px; flex-shrink: 0; }
+
+    /* CTA */
+    .cta-wrap { text-align: center; padding: 8rem 2rem; border-top: 1px solid var(--border); position: relative; overflow: hidden; }
+    .cta-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(59,139,235,0.1) 0%, transparent 70%); pointer-events: none; }
+    .cta-inner { position: relative; max-width: 640px; margin: 0 auto; }
+    .cta-wrap h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px,7vw,84px); line-height: 0.96; letter-spacing: 0.02em; margin-bottom: 1.5rem; }
+    .cta-wrap p  { font-size: 18px; color: var(--muted); font-weight: 300; margin-bottom: 2.5rem; line-height: 1.7; }
+
+    .app-store-btn {
+      display: inline-flex; align-items: center; gap: 14px;
+      background: var(--navy-card); border: 1px solid var(--border-mid);
+      color: #fff; padding: 16px 32px; border-radius: 18px; text-decoration: none;
+      box-shadow: 0 0 30px rgba(59,139,235,0.2);
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+    .app-store-btn:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(59,139,235,0.35); border-color: var(--blue); }
+    .app-store-btn .si { font-size: 34px; line-height: 1; }
+    .app-store-btn small  { display: block; font-size: 11px; color: var(--muted); font-weight: 300; }
+    .app-store-btn strong { display: block; font-size: 17px; font-weight: 500; }
+
+    .cta-sub { margin-top: 1.25rem; font-size: 13px; color: var(--muted); font-weight: 300; }
+    .cta-sub span { color: var(--cyan); font-weight: 500; }
+
+    /* FOOTER */
+    footer {
+      background: var(--navy-mid); border-top: 1px solid var(--border);
+      color: var(--muted); padding: 2rem;
+      display: flex; align-items: center; justify-content: center; gap: 16px;
+      flex-wrap: wrap; font-size: 13px; font-weight: 300;
+    }
+    .footer-logo { display: flex; align-items: center; gap: 8px; }
+    .footer-logo img { width: 28px; height: 28px; border-radius: 8px; object-fit: cover; }
+    .footer-logo-txt { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.05em; color: var(--white); }
+    .footer-logo-txt em { font-style: normal; color: var(--cyan); }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+    footer .dot { opacity: 0.4; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);} }
+    .hero-text > * { animation: fadeUp 0.65s ease both; }
+    .hero-text > *:nth-child(1){animation-delay:0.1s;}
+    .hero-text > *:nth-child(2){animation-delay:0.22s;}
+    .hero-text > *:nth-child(3){animation-delay:0.34s;}
+    .hero-text > *:nth-child(4){animation-delay:0.44s;}
+    .hero-text > *:nth-child(5){animation-delay:0.54s;}
+    .hero-phones { animation: fadeUp 0.8s 0.3s ease both; }
+
+    @media (max-width: 780px) {
+      .hero { grid-template-columns: 1fr; padding: 4rem 1.5rem 3rem; gap: 3rem; text-align: center; }
+      .hero p { margin: 0 auto 1.75rem; }
+      .price-badge { margin: 0 auto 2rem; }
+      .hero-actions { justify-content: center; }
+      .hero-phones { height: 380px; }
+      .phone-main { width: 185px; }
+      .phone-left, .phone-right { width: 158px; }
+      .wrap { padding: 4rem 1.5rem; }
+      .feat-grid, .steps-grid { grid-template-columns: 1fr; }
+      .plates-row { justify-content: center; }
+      footer { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
 <body>
 
-<h1>WODLogic</h1>
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="wodlogic_app_icon.jpeg" alt="WodLogic icon">
+    <span class="nav-logo-text">WOD<span>Logic</span></span>
+  </a>
+  <a href="#download" class="nav-cta">Get the App — $0.99</a>
+</nav>
 
-<p>
-WODLogic is a Strength training companion designed to help athletes track workouts, timers, and train smarter.
-</p>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text">
+    <span class="hero-eyebrow">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L3 12l3-6m12 12l3-6-3-6M9 6l6 12"/></svg>
+      Barbell Calculator &amp; Workout Tools
+    </span>
+    <h1>Train<br><em>Smarter.</em><br>Lift<br><em>Right.</em></h1>
+    <p>Stop doing mental math at the rack. WodLogic calculates plate loading, tracks your 1RM percentages, and times your rest — all in one clean app.</p>
+    <div class="price-badge">
+      <div class="price">$0.99</div>
+      <div class="price-detail">
+        <strong>One-time purchase</strong>
+        No subscriptions. No ads. Ever.
+      </div>
+    </div>
+    <div class="hero-actions">
+      <a href="#download" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        Download on App Store
+      </a>
+      <a href="#features" class="btn-ghost">See features →</a>
+    </div>
+  </div>
 
-<p>
-Features include:
-</p>
+  <!-- PHONES -->
+  <div class="hero-phones">
 
-<ul>
-<li>Workout tracking</li>
-<li>Progress insights</li>
-<li>Timers</li>
-</ul>
+    <!-- Left: RM% -->
+    <div class="phone phone-left">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <div class="s-title">RM %</div>
+        <div style="font-size:9px;color:#888780;margin-bottom:2px;">Exercise</div>
+        <div class="rm-ex">Back Squat ▾</div>
+        <div class="rm-1rm">1RM: 175 lb</div>
+        <div class="rm-pct">62%</div>
+        <div class="rm-ww">Working Weight</div>
+        <div class="rm-kg">107.5 lb</div>
+        <div class="rm-pl-label">Load to bar (per side)</div>
+        <div class="rm-plates">
+          <span class="rp1">25.0 × 1</span>
+          <span class="rp2">5.0 × 1</span>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L3 12l3-6m12 12l3-6-3-6M9 6l6 12"/></svg>Barbell</div>
+        <div class="ti on"><span style="font-size:13px;font-weight:500;">%</span>RM %</div>
+        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>Prefs</div>
+        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Workout</div>
+      </div>
+    </div>
 
-<p>
-Coming soon to iOS and Android.
-</p>
+    <!-- Center: Barbell -->
+    <div class="phone phone-main">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <div class="s-title">Barbell</div>
+        <div style="font-size:10px;color:#888780;margin-bottom:2px;">Total Weight</div>
+        <div class="s-weight">175.0 lb</div>
+        <div class="s-sub">Per side: 55 + 10</div>
+        <div class="clear-btn">↺ Clear Bar</div>
+        <div class="plate-grid">
+          <div class="plate p55">55.0 × 1</div>
+          <div class="plate p45">45.0 × 0</div>
+          <div class="plate p35">35.0 × 0</div>
+          <div class="plate p25">25.0 × 0</div>
+          <div class="plate p15">15.0 × 0</div>
+          <div class="plate p10">10.0 × 1</div>
+        </div>
+        <div class="plate-row2">
+          <div class="plate p5">5.0 × 0</div>
+          <div class="plate p25s">2.5 × 0</div>
+        </div>
+        <div class="s-hint">Tap to add plates per side. Long press to remove.</div>
+      </div>
+      <div class="tab-bar">
+        <div class="ti on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L3 12l3-6m12 12l3-6-3-6M9 6l6 12"/></svg>Barbell</div>
+        <div class="ti"><span style="font-size:13px;">%</span>RM %</div>
+        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>Prefs</div>
+        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Workout</div>
+      </div>
+    </div>
+
+    <!-- Right: Timer -->
+    <div class="phone phone-right">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <div class="s-title">Workout Timer</div>
+        <div style="font-size:9px;color:#888780;margin-bottom:8px;">Round 1 of 2</div>
+        <div style="font-size:9px;color:#888780;margin-bottom:5px;">Rounds</div>
+        <div class="rounds-grid">
+          <div class="rb">1</div><div class="rb on">✓ 2</div>
+          <div class="rb">3</div><div class="rb">4</div>
+          <div class="rb">5</div><div class="rb">6</div>
+        </div>
+        <div class="rest-row">
+          <div><div class="rl">Fixed Rest</div><div class="rs">after each round</div></div>
+          <div class="tog"><div></div></div>
+        </div>
+        <div class="t-start">START</div>
+        <div style="margin-top:6px;"><div class="t-stop">STOP</div></div>
+      </div>
+      <div class="tab-bar">
+        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L3 12l3-6m12 12l3-6-3-6M9 6l6 12"/></svg>Barbell</div>
+        <div class="ti"><span style="font-size:13px;">%</span>RM %</div>
+        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>Prefs</div>
+        <div class="ti on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Workout</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="wrap" id="features">
+  <div class="eyebrow">Everything you need</div>
+  <h2 class="sec-title">Four tools.<br>Zero fluff.</h2>
+  <p class="sec-body">WodLogic cuts through the noise with precisely the tools you need at the gym — nothing more, nothing less.</p>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-icon">🏋️</div>
+      <h3>Barbell Calculator</h3>
+      <p>Tap plates to build your total load in real time. Color-coded by weight class so you can read the bar at a glance. Supports 45 lb and 35 lb barbells.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="font-size:18px;font-weight:700;color:var(--cyan);">%</div>
+      <h3>RM Percentages</h3>
+      <p>Enter your 1-rep max for any lift, dial in a percentage, and get the exact plate configuration for each side of the bar instantly. Save new PRs as you hit them.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">⚙️</div>
+      <h3>Preferences</h3>
+      <p>Switch between lbs and kg. Choose your barbell weight. Settings persist so the calculator is always calibrated to your exact setup.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">⏱</div>
+      <h3>Workout Timer</h3>
+      <p>Configure 1–10 rounds with optional fixed rest between sets. Simple START / STOP — because you're between sets, not debugging an app.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PLATES STRIPE -->
+<div class="stripe">
+  <div class="stripe-inner">
+    <div class="eyebrow">Visual plate loading</div>
+    <h2 class="sec-title">Every plate.<br>Its own color.</h2>
+    <p class="sec-body">No squinting at tiny numbers. WodLogic uses the standard international color system so you recognize plates instantly, even mid-workout.</p>
+    <div class="plates-row">
+      <div class="plate-chip"><div class="plate-disk" style="background:#D85A30;">55</div><span>55 lb</span></div>
+      <div class="plate-chip"><div class="plate-disk" style="background:#378ADD;">45</div><span>45 lb</span></div>
+      <div class="plate-chip"><div class="plate-disk" style="background:#BA7517;">35</div><span>35 lb</span></div>
+      <div class="plate-chip"><div class="plate-disk" style="background:#639922;">25</div><span>25 lb</span></div>
+      <div class="plate-chip"><div class="plate-disk" style="background:#5F5E5A;">15</div><span>15 lb</span></div>
+      <div class="plate-chip"><div class="plate-disk" style="background:#888780;">10</div><span>10 lb</span></div>
+      <div class="plate-chip"><div class="plate-disk" style="background:#B4B2A9;color:#2C2C2A;">5</div><span>5 lb</span></div>
+      <div class="plate-chip"><div class="plate-disk" style="background:#D3D1C7;color:#2C2C2A;">2.5</div><span>2.5 lb</span></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num">8</div><div class="stat-label">Plate sizes</div></div>
+      <div class="stat-card"><div class="stat-num">4</div><div class="stat-label">Built-in tools</div></div>
+      <div class="stat-card"><div class="stat-num">∞</div><div class="stat-label">Exercises tracked</div></div>
+      <div class="stat-card"><div class="stat-num">$0</div><div class="stat-label">Recurring fees</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="wrap">
+  <div class="eyebrow">As simple as it gets</div>
+  <h2 class="sec-title">Ready in<br>three taps.</h2>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <h3>Set your barbell</h3>
+        <p>Choose 45 lb or 35 lb in Preferences. This is your baseline for every calculation in the app.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <h3>Log your 1RM</h3>
+        <p>Record your one-rep max for each lift. WodLogic stores it and uses it for all percentage work.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <h3>Load the bar</h3>
+        <p>Tap plates on the Barbell screen or enter a percentage on RM % — see exactly what goes on each side.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <h3>Time your rest</h3>
+        <p>Set rounds and rest in the Workout tab, then focus on lifting instead of watching the clock.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div class="wrap" id="pricing" style="padding-top:0;">
+  <div style="text-align:center;">
+    <div class="eyebrow">Simple pricing</div>
+    <h2 class="sec-title">One price.<br>Everything included.</h2>
+    <p class="sec-body" style="margin:0 auto;">No hidden fees. No monthly subscription. Pay once and own it forever.</p>
+  </div>
+  <div class="pricing-card">
+    <div class="big-price">$0.99</div>
+    <div class="one-time">One-time purchase</div>
+    <ul class="pricing-perks">
+      <li><span class="check">✓</span> Barbell plate calculator (lbs &amp; kg)</li>
+      <li><span class="check">✓</span> 1RM percentage calculator</li>
+      <li><span class="check">✓</span> Workout timer with rounds &amp; rest</li>
+      <li><span class="check">✓</span> Save 1RM records for any lift</li>
+      <li><span class="check">✓</span> No ads, no tracking, no fluff</li>
+      <li><span class="check">✓</span> All future updates included</li>
+    </ul>
+    <a href="#download" class="btn-primary" style="width:100%;justify-content:center;border-radius:14px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      Get WodLogic for $0.99
+    </a>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-wrap" id="download">
+  <div class="cta-glow"></div>
+  <div class="cta-inner">
+    <h2>Your best lift<br>starts here.</h2>
+    <p>Less than a dollar. No subscription.<br>All the tools serious lifters actually need.</p>
+    <a href="#" class="app-store-btn">
+      <span class="si">🍎</span>
+      <span>
+        <small>Download on the</small>
+        <strong>App Store</strong>
+      </span>
+    </a>
+    <div class="cta-sub">Just <span>$0.99</span> — one-time. Own it forever.</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <img src="wodlogic_app_icon.jpeg" alt="WodLogic">
+    <span class="footer-logo-txt">WOD<em>Logic</em></span>
+  </div>
+  <span class="dot">·</span>
+  <span>© 2026 WodLogic</span>
+  <span class="dot">·</span>
+  <a href="#">Privacy Policy</a>
+  <span class="dot">·</span>
+  <a href="#">Support</a>
+</footer>
 
 </body>
 </html>
