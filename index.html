@@ -111,22 +111,24 @@
 
     /* PHONES */
     .hero-phones {
-      position: relative; height: 540px;
       display: flex; align-items: flex-end; justify-content: center;
+      gap: 12px; flex-wrap: nowrap; overflow-x: auto;
+      padding: 0 1rem 1rem;
     }
     .phone {
-      position: absolute; background: #0D1624;
-      border-radius: 36px; overflow: hidden;
+      flex-shrink: 0;
+      background: #0D1624;      border-radius: 36px; overflow: hidden;
       border: 7px solid #1A2A44;
       box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(59,139,235,0.12);
+      width: 160px;
     }
-    .phone-main  { width: 220px; z-index: 3; bottom: 0; left: 50%; transform: translateX(-50%); }
-    .phone-left  { width: 188px; z-index: 2; bottom: 50px; left: 0; transform: rotate(-7deg); opacity: 0.82; }
-    .phone-right { width: 188px; z-index: 2; bottom: 50px; right: 0; transform: rotate(7deg);  opacity: 0.82; }
-
-    .phone-screen { background: #FAF6F1; color: #2C2C2A; padding: 14px 12px 10px; min-height: 375px; }
-    .phone-notch  { width: 80px; height: 20px; background: #0D1624; border-radius: 0 0 14px 14px; margin: -4px auto 10px; }
-
+    .phone img { width: 100%; display: block; }
+    .phone:nth-child(1) { transform: rotate(-6deg) translateY(20px); opacity: 0.8; }
+    .phone:nth-child(2) { transform: rotate(-3deg) translateY(10px); opacity: 0.9; }
+    .phone:nth-child(3) { transform: rotate(0deg)  translateY(0);    opacity: 1;   width: 178px; }
+    .phone:nth-child(4) { transform: rotate(0deg)  translateY(0);    opacity: 1;   width: 178px; }
+    .phone:nth-child(5) { transform: rotate(3deg)  translateY(10px); opacity: 0.9; }
+    .phone:nth-child(6) { transform: rotate(6deg)  translateY(20px); opacity: 0.8; }
     .s-title  { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.03em; color: #2C2C2A; margin-bottom: 4px; }
     .s-weight { font-family: 'Bebas Neue', sans-serif; font-size: 38px; color: #2C2C2A; line-height: 1; margin-bottom: 2px; }
     .s-sub    { font-size: 10px; color: #888780; margin-bottom: 8px; }
@@ -201,7 +203,7 @@
       border: 3px solid rgba(255,255,255,0.1); box-shadow: 0 4px 16px rgba(0,0,0,0.4);
     }
     .plate-chip span { font-size: 11px; color: var(--muted); }
-
+    .plates-unit-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 3rem; }
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.25rem; margin-top: 3rem; }
     .stat-card { background: rgba(59,139,235,0.06); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; text-align: center; transition: border-color 0.2s; }
     .stat-card:hover { border-color: var(--border-mid); }
@@ -289,10 +291,9 @@
       .hero p { margin: 0 auto 1.75rem; }
       .price-badge { margin: 0 auto 2rem; }
       .hero-actions { justify-content: center; }
-      .hero-phones { height: 380px; }
-      .phone-main { width: 185px; }
-      .phone-left, .phone-right { width: 158px; }
-      .wrap { padding: 4rem 1.5rem; }
+      .hero-phones { justify-content: flex-start; padding: 0 1.5rem 1rem; }
+      .phone { width: 130px; }
+      .phone:nth-child(3), .phone:nth-child(4) { width: 145px; }      .wrap { padding: 4rem 1.5rem; }
       .feat-grid, .steps-grid { grid-template-columns: 1fr; }
       .plates-row { justify-content: center; }
       footer { flex-direction: column; gap: 8px; }
@@ -337,90 +338,12 @@
 
   <!-- PHONES -->
   <div class="hero-phones">
-
-    <!-- Left: RM% -->
-    <div class="phone phone-left">
-      <div class="phone-screen">
-        <div class="phone-notch"></div>
-        <div class="s-title">RM %</div>
-        <div style="font-size:9px;color:#888780;margin-bottom:2px;">Exercise</div>
-        <div class="rm-ex">Back Squat ▾</div>
-        <div class="rm-1rm">1RM: 175 lb</div>
-        <div class="rm-pct">62%</div>
-        <div class="rm-ww">Working Weight</div>
-        <div class="rm-kg">107.5 lb</div>
-        <div class="rm-pl-label">Load to bar (per side)</div>
-        <div class="rm-plates">
-          <span class="rp1">25.0 × 1</span>
-          <span class="rp2">5.0 × 1</span>
-        </div>
-      </div>
-      <div class="tab-bar">
-        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L3 12l3-6m12 12l3-6-3-6M9 6l6 12"/></svg>Barbell</div>
-        <div class="ti on"><span style="font-size:13px;font-weight:500;">%</span>RM %</div>
-        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>Prefs</div>
-        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Workout</div>
-      </div>
-    </div>
-
-    <!-- Center: Barbell -->
-    <div class="phone phone-main">
-      <div class="phone-screen">
-        <div class="phone-notch"></div>
-        <div class="s-title">Barbell</div>
-        <div style="font-size:10px;color:#888780;margin-bottom:2px;">Total Weight</div>
-        <div class="s-weight">175.0 lb</div>
-        <div class="s-sub">Per side: 55 + 10</div>
-        <div class="clear-btn">↺ Clear Bar</div>
-        <div class="plate-grid">
-          <div class="plate p55">55.0 × 1</div>
-          <div class="plate p45">45.0 × 0</div>
-          <div class="plate p35">35.0 × 0</div>
-          <div class="plate p25">25.0 × 0</div>
-          <div class="plate p15">15.0 × 0</div>
-          <div class="plate p10">10.0 × 1</div>
-        </div>
-        <div class="plate-row2">
-          <div class="plate p5">5.0 × 0</div>
-          <div class="plate p25s">2.5 × 0</div>
-        </div>
-        <div class="s-hint">Tap to add plates per side. Long press to remove.</div>
-      </div>
-      <div class="tab-bar">
-        <div class="ti on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L3 12l3-6m12 12l3-6-3-6M9 6l6 12"/></svg>Barbell</div>
-        <div class="ti"><span style="font-size:13px;">%</span>RM %</div>
-        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>Prefs</div>
-        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Workout</div>
-      </div>
-    </div>
-
-    <!-- Right: Timer -->
-    <div class="phone phone-right">
-      <div class="phone-screen">
-        <div class="phone-notch"></div>
-        <div class="s-title">Workout Timer</div>
-        <div style="font-size:9px;color:#888780;margin-bottom:8px;">Round 1 of 2</div>
-        <div style="font-size:9px;color:#888780;margin-bottom:5px;">Rounds</div>
-        <div class="rounds-grid">
-          <div class="rb">1</div><div class="rb on">✓ 2</div>
-          <div class="rb">3</div><div class="rb">4</div>
-          <div class="rb">5</div><div class="rb">6</div>
-        </div>
-        <div class="rest-row">
-          <div><div class="rl">Fixed Rest</div><div class="rs">after each round</div></div>
-          <div class="tog"><div></div></div>
-        </div>
-        <div class="t-start">START</div>
-        <div style="margin-top:6px;"><div class="t-stop">STOP</div></div>
-      </div>
-      <div class="tab-bar">
-        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L3 12l3-6m12 12l3-6-3-6M9 6l6 12"/></svg>Barbell</div>
-        <div class="ti"><span style="font-size:13px;">%</span>RM %</div>
-        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>Prefs</div>
-        <div class="ti on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Workout</div>
-      </div>
-    </div>
-
+    <div class="phone"><img src="assets/images/Screenshot - 1.png" alt="WodLogic screenshot 1"></div>
+    <div class="phone"><img src="assets/images/Screenshot - 2.png" alt="WodLogic screenshot 2"></div>
+    <div class="phone"><img src="assets/images/Screenshot - 3.png" alt="WodLogic screenshot 3"></div>
+    <div class="phone"><img src="assets/images/Screenshot - 4.png" alt="WodLogic screenshot 4"></div>
+    <div class="phone"><img src="assets/images/Screenshot - 5.png" alt="WodLogic screenshot 5"></div>
+    <div class="phone"><img src="assets/images/Screenshot - 6.png" alt="WodLogic screenshot 6"></div>
   </div>
 </div>
 
@@ -462,13 +385,24 @@
     <div class="plates-row">
       <div class="plate-chip"><div class="plate-disk" style="background:#D85A30;">55</div><span>55 lb</span></div>
       <div class="plate-chip"><div class="plate-disk" style="background:#378ADD;">45</div><span>45 lb</span></div>
-      <div class="plate-chip"><div class="plate-disk" style="background:#BA7517;">35</div><span>35 lb</span></div>
+      <div class="plate-chip"><div class="plate-disk" style="background:#eab846;">35</div><span>35 lb</span></div>
       <div class="plate-chip"><div class="plate-disk" style="background:#639922;">25</div><span>25 lb</span></div>
       <div class="plate-chip"><div class="plate-disk" style="background:#5F5E5A;">15</div><span>15 lb</span></div>
       <div class="plate-chip"><div class="plate-disk" style="background:#888780;">10</div><span>10 lb</span></div>
       <div class="plate-chip"><div class="plate-disk" style="background:#B4B2A9;color:#2C2C2A;">5</div><span>5 lb</span></div>
       <div class="plate-chip"><div class="plate-disk" style="background:#D3D1C7;color:#2C2C2A;">2.5</div><span>2.5 lb</span></div>
     </div>
+    <div class="plates-unit-label" style="margin-top:1.5rem;">Kilograms (kg)</div>
+    <div class="plates-row">
+      <div class="plate-chip"><div class="plate-disk" style="background:#D85A30;">25</div><span>25 kg</span></div>
+      <div class="plate-chip"><div class="plate-disk" style="background:#378ADD;">20</div><span>20 kg</span></div>
+      <div class="plate-chip"><div class="plate-disk" style="background:#BA7517;">15</div><span>15 kg</span></div>
+      <div class="plate-chip"><div class="plate-disk" style="background:#639922;">10</div><span>10 kg</span></div>
+      <div class="plate-chip"><div class="plate-disk" style="background:#888780;color:#fff;">5</div><span>5 kg</span></div>
+      <div class="plate-chip"><div class="plate-disk" style="background:#B4B2A9;color:#2C2C2A;">2.5</div><span>2.5 kg</span></div>
+      <div class="plate-chip"><div class="plate-disk" style="background:#D3D1C7;color:#2C2C2A;">1.25</div><span>1.25 kg</span></div>
+    </div>
+
     <div class="stats-grid">
       <div class="stat-card"><div class="stat-num">8</div><div class="stat-label">Plate sizes</div></div>
       <div class="stat-card"><div class="stat-num">4</div><div class="stat-label">Built-in tools</div></div>
