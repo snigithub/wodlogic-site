@@ -109,26 +109,28 @@
     }
     .btn-ghost:hover { color: var(--white); border-color: var(--blue); }
 
-    /* PHONES */
+    /* SCREENSHOTS CAROUSEL */
+    .screenshots-section { padding: 0 0 4rem; }
+    .phones-carousel {
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 18%, #000 82%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, #000 18%, #000 82%, transparent 100%);
+      padding: 2rem 0;
+    }
     .hero-phones {
-      display: flex; align-items: flex-end; justify-content: center;
-      gap: 12px; flex-wrap: nowrap; overflow-x: auto;
-      padding: 0 1rem 1rem;
+      display: flex; align-items: flex-end;
+      gap: 14px; flex-wrap: nowrap;
+      width: max-content;
+      will-change: transform;
     }
     .phone {
       flex-shrink: 0;
       background: #0D1624;      border-radius: 36px; overflow: hidden;
       border: 7px solid #1A2A44;
-      box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(59,139,235,0.12);
-      width: 160px;
+      box-shadow: 0 24px 56px rgba(0,0,0,0.45), 0 0 0 1px rgba(59,139,235,0.12);
+      width: 200px;
     }
     .phone img { width: 100%; display: block; }
-    .phone:nth-child(1) { transform: rotate(-6deg) translateY(20px); opacity: 0.8; }
-    .phone:nth-child(2) { transform: rotate(-3deg) translateY(10px); opacity: 0.9; }
-    .phone:nth-child(3) { transform: rotate(0deg)  translateY(0);    opacity: 1;   width: 178px; }
-    .phone:nth-child(4) { transform: rotate(0deg)  translateY(0);    opacity: 1;   width: 178px; }
-    .phone:nth-child(5) { transform: rotate(3deg)  translateY(10px); opacity: 0.9; }
-    .phone:nth-child(6) { transform: rotate(6deg)  translateY(20px); opacity: 0.8; }
     .s-title  { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.03em; color: #2C2C2A; margin-bottom: 4px; }
     .s-weight { font-family: 'Bebas Neue', sans-serif; font-size: 38px; color: #2C2C2A; line-height: 1; margin-bottom: 2px; }
     .s-sub    { font-size: 10px; color: #888780; margin-bottom: 8px; }
@@ -284,19 +286,12 @@
     .hero-text > *:nth-child(3){animation-delay:0.34s;}
     .hero-text > *:nth-child(4){animation-delay:0.44s;}
     .hero-text > *:nth-child(5){animation-delay:0.54s;}
-    .hero-phones { animation: fadeUp 0.8s 0.3s ease both; }
+    .screenshots-section { animation: fadeUp 0.8s 0.3s ease both; }
 
     @media (max-width: 780px) {
-      .hero { grid-template-columns: 1fr; padding: 4rem 1.5rem 3rem; gap: 3rem; text-align: center; }
-      .hero p { margin: 0 auto 1.75rem; }
-      .price-badge { margin: 0 auto 2rem; }
-      .hero-actions { justify-content: center; }
-      .hero-phones { justify-content: flex-start; padding: 0 1.5rem 1rem; }
-      .phone { width: 130px; }
-      .phone:nth-child(3), .phone:nth-child(4) { width: 145px; }      .wrap { padding: 4rem 1.5rem; }
-      .feat-grid, .steps-grid { grid-template-columns: 1fr; }
-      .plates-row { justify-content: center; }
-      footer { flex-direction: column; gap: 8px; }
+      .hero { padding: 4rem 1.5rem 2rem; }
+      .phone { width: 155px; }
+      .wrap { padding: 4rem 1.5rem; }
     }
   </style>
 </head>
@@ -336,16 +331,23 @@
     </div>
   </div>
 
-  <!-- PHONES -->
-  <div class="hero-phones">
-    <div class="phone"><img src="assets/images/Screenshot - 1.png" alt="WodLogic screenshot 1"></div>
-    <div class="phone"><img src="assets/images/Screenshot - 2.png" alt="WodLogic screenshot 2"></div>
-    <div class="phone"><img src="assets/images/Screenshot - 3.png" alt="WodLogic screenshot 3"></div>
-    <div class="phone"><img src="assets/images/Screenshot - 4.png" alt="WodLogic screenshot 4"></div>
-    <div class="phone"><img src="assets/images/Screenshot - 5.png" alt="WodLogic screenshot 5"></div>
-    <div class="phone"><img src="assets/images/Screenshot - 6.png" alt="WodLogic screenshot 6"></div>
   </div>
-</div>
+  <!-- SCREENSHOTS CAROUSEL -->
+  <section class="screenshots-section">
+    <div class="phones-carousel">
+      <div class="hero-phones" id="phonesTrack">
+        <div class="phone"><img src="assets/images/Screenshot - 1.png" alt="WodLogic screenshot 1"></div>
+        <div class="phone"><img src="assets/images/Screenshot - 2.png" alt="WodLogic screenshot 2"></div>
+        <div class="phone"><img src="assets/images/Screenshot - 3.png" alt="WodLogic screenshot 3"></div>
+        <div class="phone"><img src="assets/images/Screenshot - 4.png" alt="WodLogic screenshot 4"></div>
+        <div class="phone"><img src="assets/images/Screenshot - 5.png" alt="WodLogic screenshot 5"></div>
+        <div class="phone"><img src="assets/images/Screenshot - 6.png" alt="WodLogic screenshot 6"></div>
+        <div class="phone"><img src="assets/images/Screenshot - 7.png" alt="WodLogic screenshot 7"></div>
+        <div class="phone"><img src="assets/images/Screenshot - 8.png" alt="WodLogic screenshot 8"></div>
+        <div class="phone"><img src="assets/images/Screenshot - 9.png" alt="WodLogic screenshot 9"></div>
+      </div>
+  </div>
+  </section>
 
 <!-- FEATURES -->
 <div class="wrap" id="features">
@@ -402,7 +404,6 @@
       <div class="plate-chip"><div class="plate-disk" style="background:#B4B2A9;color:#2C2C2A;">2.5</div><span>2.5 kg</span></div>
       <div class="plate-chip"><div class="plate-disk" style="background:#D3D1C7;color:#2C2C2A;">1.25</div><span>1.25 kg</span></div>
     </div>
-
     <div class="stats-grid">
       <div class="stat-card"><div class="stat-num">8</div><div class="stat-label">Plate sizes</div></div>
       <div class="stat-card"><div class="stat-num">4</div><div class="stat-label">Built-in tools</div></div>
@@ -510,6 +511,45 @@
     © 2026 <strong style="color:var(--blue-pale);font-weight:500;">Celestial Legacy Sales LLC</strong> — All rights reserved.
   </div>
 </footer>
+
+<script>
+  (function () {
+    var track = document.getElementById('phonesTrack');
+    if (!track) return;
+
+    var phones = Array.from(track.querySelectorAll('.phone'));
+    var N = phones.length;
+    var GAP = 14;
+    var SLIDE_MS = 700;
+    var idx = 0;
+
+    // Clone all phones so the strip loops seamlessly
+    phones.forEach(function (p) { track.appendChild(p.cloneNode(true)); });
+
+    function step() {
+      return phones[0].offsetWidth + GAP;
+    }
+
+    function slideTo(i, animate) {
+      track.style.transition = animate
+              ? 'transform ' + SLIDE_MS + 'ms cubic-bezier(0.4, 0, 0.2, 1)'
+              : 'none';
+      track.style.transform = 'translateX(' + (-i * step()) + 'px)';
+    }
+
+    setInterval(function () {
+      idx++;
+      slideTo(idx, true);
+      // Once past the original set, silently reset to the equivalent real position
+      if (idx >= N) {
+        setTimeout(function () {
+          idx -= N;
+          slideTo(idx, false);
+        }, SLIDE_MS + 50);
+      }
+    }, 2800);
+  }());
+</script>
 
 </body>
 </html>
